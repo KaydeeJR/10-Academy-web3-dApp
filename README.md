@@ -16,7 +16,7 @@ In this project, the client is 10 Academy; the client would like to solve the ch
 
 :file_folder: **Scripts**
 
-<ul>:arrow_up:contains script files for the backend, algorand SDK and </ul>
+<ul>:arrow_up:contains script files for the backend and the algorand SDK</ul>
 
 # Installation guide
 git clone https://github.com/KaydeeJR/10-Academy-web3-dApp
