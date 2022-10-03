@@ -12,7 +12,7 @@ def connect_kmd_client():
     return kmd_client
 
 #get wallet details
-def wallet_details(wallet_name, password, client):
+def wallet_details(wallet_name, password):
     # key manager
     client = connect_kmd_client()
     # create wallet
