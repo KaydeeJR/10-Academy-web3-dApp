@@ -1,6 +1,6 @@
 from algosdk.future.transaction import AssetConfigTxn, wait_for_confirmation
 from connect_client import connect_to_algod_api
-import kmd_client
+import scripts.kmd_wallet as kmd_wallet
 
 def get_txn_parameters(algod_client):
     # Get network params for transactions before every transaction
