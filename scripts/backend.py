@@ -2,8 +2,8 @@
 ENDPOINTS:
 Connects front end to Algorand SDK
 """
-import kmd_client
-import algo_test_account
+import scripts.kmd_wallet as kmd_wallet
+import scripts.account_details as account_details
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -47,9 +47,9 @@ def account_details():
     if request.method == 'POST':
         user_email = request.json['username']
         pword = request.json['password']
-        wallet = kmd_client.wallet_details(user_email, pword)
+        wallet = kmd_wallet.wallet_details(user_email, pword)
         wal_mnemonic = wallet.get_mnemonic()
-        pub_address = algo_test_account.get_public_from_mnemo(wal_mnemonic)
+        pub_address = account_details.get_public_from_mnemo(wal_mnemonic)
         print(pub_address)
         return jsonify({"public address": pub_address})
 
