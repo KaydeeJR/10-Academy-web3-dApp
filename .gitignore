@@ -4,6 +4,8 @@
 /package-lock.json
 /package.json
 /notebooks
+/data
 
 .env
 .flaskenv
+commands.txt
