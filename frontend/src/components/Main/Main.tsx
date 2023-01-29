@@ -4,6 +4,7 @@ import Button, { ButtonProps } from '@mui/material/Button';
 import { red } from '@mui/material/colors';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,27 +12,17 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-// import { useHistory } from 'react-router';
+import Staff from '../Staff/Staff';
+import Trainee from '../Trainee/Trainee';
+import Public from '../Public/Public';
 
-// interface Props {
-//     setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-// }
-// function userExists(email:string) {
-// 	var results = api.db.query('users', {
-// 		email: email
-// 	});
-// 	if (results.length === 1) {
-// 		return true;
-// 	}
-// 	return false;
-// }
 const Home: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [userEmail, setUserEmail] = useState('');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    // const history = useHistory();
+    const navigate = useNavigate();
+
 
     const handleSubmit = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -39,26 +30,62 @@ const Home: React.FC = () => {
         // Runs after login button is clicked
         // N/B: MUST have a running instance of Strapi with local authentication provided.
         event.preventDefault();
-        // make a POST request to the Strapi backend's authentication endpoint with the user email and password
+        // make a POST request to the Strapi backend's registration endpoint with the user name, email and password
         axios
-      .post('http://localhost:1337/api/auth/local/register', {
-        username: userName,
-        email: userEmail,
-        password,
-      })
-      .then(response => {
-        // Response from the Strapi backend is logged to the console
-        console.log('User profile', response.data.user);
-        console.log('User token', response.data.jwt);
-      })
-      .catch(error => {
-        // Erros from the Strapi backend are logged to the console
-        console.log('An error occurred:', error.response);
-        console.log(typeof error)
-        // setErrorMessage(error)
-      });
-      handleClose()
+            .post('http://localhost:1337/api/auth/local/register', {
+                username: userName,
+                email: userEmail,
+                password,
+            })
+            .then(response => {
+                // Response from the Strapi backend is logged to the console
+                console.log('User profile', response.data.user);
+                console.log('User token', response.data.jwt);
+            })
+            .catch(error => {
+                // Erros from the Strapi backend are logged to the console
+                if (error.response.status === 400) {
+                    // USER ALREADY EXISTS SO HANDLE AUTHORIZATION
+                    handleAuthorization()
+                }
+                else {
+                    console.log(error.response.status)
+                }
+            });
+        handleClose()
     };
+
+    const handleAuthorization = () => {
+        // make a POST request to the Strapi backend's authentication endpoint with the user name, email and password
+        axios
+            .post('http://localhost:1337/api/auth/local', {
+                identifier: userEmail,
+                password,
+            })
+            .then(response => {
+                // Response from the Strapi backend is logged to the console
+                // console.log('User profile ID', response.data.user.id);
+                console.log('User role', response.data.user["user_role"]);
+                switch (response.data.user["user_role"]) {
+                    case "Trainee":
+                        navigateToTrainees();
+                        break;
+                    case "Staff":
+                        navigateToStaff();
+                        break;
+                    case "Public":
+                        navigateToPublic();
+                        break;
+                    default:
+                        navigateHome();
+                        break;
+                }
+            })
+            .catch(error => {
+                // Erros from the Strapi backend are logged to the console
+                console.log(error.response.status)
+            });
+    }
 
     const handleClickOpen = () => {
         setDialogOpen(true);
@@ -66,7 +93,6 @@ const Home: React.FC = () => {
         setUserEmail('')
         setPassword('')
         setUserName('')
-        setErrorMessage('')
     };
 
     const handleClose = () => {
@@ -75,7 +101,25 @@ const Home: React.FC = () => {
         setUserEmail('')
         setPassword('')
         setUserName('')
-        setErrorMessage('')
+    };
+
+    const navigateToStaff = () => {
+        // navigate to Staff page
+        navigate('/staff');
+    };
+
+    const navigateHome = () => {
+        // navigate to Home page
+        navigate('/');
+    };
+
+    const navigateToTrainees = () => {
+        // navigate to Trainees page
+        navigate('/trainees');
+    };
+    const navigateToPublic = () => {
+        // navigate to Public page
+        navigate('/public');
     };
 
     const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -156,6 +200,15 @@ const Home: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            {/* NAVIGATION */}
+            <BrowserRouter>
+                <Routes>
+                    < Route path="/staff" element={< Staff />} />
+                    < Route path="/trainee" element={< Trainee />} />
+                    < Route path="/public" element={< Public />} />
+                </Routes>
+            </BrowserRouter>
         </main>
     );
 };
