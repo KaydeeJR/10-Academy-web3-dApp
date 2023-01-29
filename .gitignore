@@ -5,6 +5,7 @@
 /package.json
 /notebooks
 /data
+/sandbox
 
 .env
 .flaskenv
