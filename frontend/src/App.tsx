@@ -1,13 +1,14 @@
 import React from 'react';
 import Header from './components/Header/Header';
-import Main from './components/Main/Main';
 import Footer from './components/Footer/Footer';
+import Pages from './components/Pages';
+
 
 const App: React.FC = () => {
   return (
     <div>
       <Header />
-      <Main />
+      <Pages />
       <Footer />
     </div>
   );

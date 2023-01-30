@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
       "lib": ["es6", "dom"],
-      "noImplicitAny": true,
+      "noImplicitAny": false,
       "noImplicitThis": true,
       "strictNullChecks": true,
       "jsx":"react-jsx",
       "esModuleInterop": true,
 
     },
-    "include": ["src", "src/declaration.d.ts", "../walletIntergration.ts"]
+    // FILES TO BE INCLUDED WHEN COMPILING THE REACT APPLICATION
+    "include": ["src", "src/declaration.d.ts"]
   }

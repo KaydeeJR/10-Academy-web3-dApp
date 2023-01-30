@@ -4,7 +4,7 @@ import Button, { ButtonProps } from '@mui/material/Button';
 import { red } from '@mui/material/colors';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';   
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -12,9 +12,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import Staff from '../Staff/Staff';
-import Trainee from '../Trainee/Trainee';
-import Public from '../Public/Public';
 
 const Home: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -22,7 +19,6 @@ const Home: React.FC = () => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-
 
     const handleSubmit = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -98,9 +94,9 @@ const Home: React.FC = () => {
     const handleClose = () => {
         setDialogOpen(false);
         // reset input textfields to empty values
-        setUserEmail('')
-        setPassword('')
-        setUserName('')
+        setUserEmail('');
+        setPassword('');
+        setUserName('');
     };
 
     const navigateToStaff = () => {
@@ -115,6 +111,7 @@ const Home: React.FC = () => {
 
     const navigateToTrainees = () => {
         // navigate to Trainees page
+        // navigate('/trainees', { replace: true });     
         navigate('/trainees');
     };
     const navigateToPublic = () => {
@@ -199,16 +196,7 @@ const Home: React.FC = () => {
                         Submit
                     </Button>
                 </DialogActions>
-            </Dialog>
-
-            {/* NAVIGATION */}
-            <BrowserRouter>
-                <Routes>
-                    < Route path="/staff" element={< Staff />} />
-                    < Route path="/trainee" element={< Trainee />} />
-                    < Route path="/public" element={< Public />} />
-                </Routes>
-            </BrowserRouter>
+            </Dialog> 
         </main>
     );
 };
