@@ -3,3 +3,16 @@
     font-weight: bold;
     text-align: center;
 }
+
+.row-component{
+    display:flex;
+    flex-direction: row;
+    margin: auto;
+    width: 50%;
+}
+
+.table{
+    width:100%;
+    margin-left: auto;
+    margin-right: auto;
+}

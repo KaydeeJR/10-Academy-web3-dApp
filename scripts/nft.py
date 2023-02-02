@@ -1,8 +1,5 @@
 import json
 import hashlib
-import logging
-from algosdk import mnemonic
-from algosdk.v2client import algod
 from algosdk.future.transaction import AssetConfigTxn, wait_for_confirmation
 from scripts.kmd_wallet import KmdAlgorand
 # from closeout_account import closeout_account
@@ -27,7 +24,7 @@ class Nft():
         self.algod_client = self.kmd_algorand_class.set_up_algod_client()
     
     
-    def mint_nft(self, sender_account, asset_unit_name, asset_name, asset_details_url, path_to_file):
+    def mint_nft(self, sender_account, asset_unit_name, asset_name, asset_url, json_metadata_hash):
         """
         Mints an NFT by converting digital data into crypto collections or digital assets recorded on the blockchain.
         Leaving all addresses as None will result in an NFT that cannot be modified for life
@@ -41,9 +38,9 @@ class Nft():
         
         asset_unit_name: a string of up to 8-bytes that specifies the name of a unit of the asset
         
-        asset_details_url: path that shows details about the NFT - may be stored off-chain on a system like IPFS. E.g. "https://path/to/my/asset/details"
+        asset_url: path that shows details about the NFT - may be stored off-chain on a system like IPFS. E.g. "https://gateway.pinata.cloud/ipfs://YOUR_METADATA_CID"
 
-        path_to_file: path that points to a json file on disk 
+        json_metadata_hash: a hash calculation of a json file retrieved from IPFS 
         """        
         # Get network parameters.
         params = self.fetch_network_parameters()
@@ -51,10 +48,7 @@ class Nft():
         # uncomment these two lines if you do not want to use suggested params and instead set you own parametes
         # params.fee = 1000
         # params.flat_fee = True
-
-        # a hash of the json 
-        json_metadata_hash = self.access_json_file(path_to_file)
-        
+        #         
         # Asset Creation transaction
         txn = AssetConfigTxn(
             sender=sender_account,
@@ -68,7 +62,7 @@ class Nft():
             freeze=None,
             clawback=None,
             strict_empty_address_check=False,
-            url=asset_details_url, 
+            url=asset_url, 
             metadata_hash=json_metadata_hash,
             decimals=0)
         
@@ -105,19 +99,16 @@ class Nft():
         return params
         
 
-    def access_json_file(self, file_path):
+    def access_json_file(self, json_file_CID):
         """
-        accesses a json file on a  and converts the file to json format then calculates the hash for that file
+        Accepts a json file that is hosted on IPFS such as Pinata and then calculates the hash for that file
         
         Parameter:        
         
         file_path: path that points to json file on disk 
-        """
-        # open a JSON file
-        f = open (file_path, "r")
-        
+        """        
         # Reading from file and calculating metadata
-        metadataJSON = json.loads(f.read())
+        metadataJSON = json.loads(json_file_CID)
         metadataStr = json.dumps(metadataJSON)
         
         hash = hashlib.new("sha512_256")
