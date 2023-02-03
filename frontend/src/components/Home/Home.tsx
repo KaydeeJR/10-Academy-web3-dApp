@@ -34,6 +34,7 @@ const Home: React.FC = () => {
                 password,
             })
             .then(response => {
+                // after registration, save user details
                 // Response from the Strapi backend is logged to the console
                 console.log('User profile', response.data.user);
                 console.log('User token', response.data.jwt);
